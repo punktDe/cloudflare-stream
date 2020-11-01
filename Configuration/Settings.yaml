@@ -1,0 +1,12 @@
+PunktDe:
+  Cloudflare:
+    Stream:
+      cloudflare:
+        authentication:
+          accountIdentifier: ''
+          token: ''
+      transfer:
+        # Proxy to reach the cloudflare API
+        proxyUrl: ''
+
+

@@ -1,0 +1,4 @@
+Neos:
+  Fusion:
+    defaultContext:
+      Stream:  PunktDe\Cloudflare\Stream\Eel\StreamHelper

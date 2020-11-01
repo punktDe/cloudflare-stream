@@ -1,0 +1,18 @@
+{
+    "description": "",
+    "type": "neos-package",
+    "name": "punktde/cloudflare-stream",
+    "require": {
+        "neos/media": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PunktDe\\Cloudflare\\Stream\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "PunktDe.Cloudflare.Stream"
+        }
+    }
+}
