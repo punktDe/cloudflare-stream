@@ -98,7 +98,8 @@ class CloudflareResponse
      */
     public function getErrorInformation(): string
     {
-        return sprintf('StatusCode: %s. CloudFlare Errors: %s', $this->httpStatus, implode(',',
+        return sprintf('StatusCode: %s. CloudFlare Errors: %s', $this->httpStatus, implode(
+            ',',
             array_map(static function ($error) {
                 return sprintf('%s [Code: %s]', $error['message'] ?? 'Unknown error', $error['code']);
             }, $this->errors)
