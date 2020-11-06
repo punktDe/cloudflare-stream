@@ -1,9 +1,10 @@
 {
-    "description": "",
+    "description": "Adaptive video streaming using the cloudflare stream service",
     "type": "neos-package",
     "name": "punktde/cloudflare-stream",
+    "license": "MIT",
     "require": {
-        "neos/media": "*"
+        "neos/flow": "^4.1 || ^5.0"
     },
     "autoload": {
         "psr-4": {
