@@ -41,5 +41,6 @@ class Package extends BasePackage
         $dispatcher->connect(AssetService::class, 'assetCreated', AssetHandler::class, 'assetCreated');
         $dispatcher->connect(AssetService::class, 'assetRemoved', AssetHandler::class, 'assetRemoved');
         $dispatcher->connect(AssetService::class, 'assetUpdated', AssetHandler::class, 'assetUpdated');
+        $dispatcher->connect(AssetService::class, 'assetResourceReplaced', AssetHandler::class, 'assetResourceReplaced');
     }
 }
