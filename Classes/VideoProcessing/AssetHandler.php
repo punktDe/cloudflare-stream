@@ -12,7 +12,6 @@ use JsonException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
-use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\Video;
 use Psr\Log\LoggerInterface;
