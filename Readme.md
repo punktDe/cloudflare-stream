@@ -2,7 +2,8 @@
 
 [![Latest Stable Version](https://poser.pugx.org/punktDe/cloudflare-stream/v/stable)](https://packagist.org/packages/punktDe/cloudflare-stream) [![Total Downloads](https://poser.pugx.org/punktDe/cloudflare-stream/downloads)](https://packagist.org/packages/punktDe/cloudflare-stream) [![License](https://poser.pugx.org/punktDe/cloudflare-stream/license)](https://packagist.org/packages/punktDe/cloudflare-stream)
 
-When videos are added to neos, this package automatically uploads them to the [cloudflare stream service](https://www.cloudflare.com/de-de/products/cloudflare-stream/) and stores the provided DASH and HLS as well as the generated thumbnail for the rendering in the frontend.
+When videos are uploaded to Neos, this package automatically uploads these videos to the [cloudflare stream service](https://www.cloudflare.com/de-de/products/cloudflare-stream/) and stores the provided DASH and HLS URIs, as well as the thumbnail URL for rendering them in the frontend.
+An Eel helper is provided, to retrieve this meta data by a given video to use it in the video player of your choice.
 
 ## Installation
 
@@ -55,3 +56,4 @@ In your custome project code, add a node type with a video ptoperty to select or
 |--------------------------|-------------------------------------------|
 | `cloudflare:listvideos ` | List all uploaded videos for that account |
 | `cloudflare:deletevideo `| Delete a video from cloudflare            |
+| `cloudflare:uploadAll`   | Upload all existign videos to cloudflare  |
