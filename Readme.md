@@ -56,4 +56,4 @@ In your custome project code, add a node type with a video ptoperty to select or
 |--------------------------|-------------------------------------------|
 | `cloudflare:listvideos ` | List all uploaded videos for that account |
 | `cloudflare:deletevideo `| Delete a video from cloudflare            |
-| `cloudflare:uploadAll`   | Upload all existign videos to cloudflare  |
+| `cloudflare:uploadAll`   | Upload all existing videos to cloudflare  |
