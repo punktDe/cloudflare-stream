@@ -11,6 +11,7 @@ namespace PunktDe\Cloudflare\Stream\VideoProcessing;
 use JsonException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
+use Neos\Flow\Persistence\Doctrine\PersistenceManager;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\Video;
@@ -43,6 +44,12 @@ class AssetHandler
      * @var VideoMetaDataRepository
      */
     protected $videoMetaDataRepository;
+
+    /**
+     * @Flow\Inject
+     * @var PersistenceManager
+     */
+    protected $persistenceManager;
 
     /**
      * @param AssetInterface $asset
@@ -126,7 +133,14 @@ class AssetHandler
             $this->videoMetaDataRepository->remove($videoMetaData);
         }
 
-        $videoMetaData = VideoMetaData::fromCloudflareResponse($this->cloudflareClient->uploadVideo($asset));
+        try {
+            $videoMetaData = VideoMetaData::fromCloudflareResponse($this->cloudflareClient->uploadVideo($asset));
+        } catch (\Exception $e) {
+            // Keep the uploaded video and resource
+            $this->persistenceManager->persistAll();
+            throw $e;
+        }
+
         $videoMetaData->setVideo($asset);
         $this->videoMetaDataRepository->add($videoMetaData);
         return true;
