@@ -69,6 +69,11 @@ class CloudflareCommandController extends CommandController
             }, $videoResponse->getResult()),
             ['UID', 'Name', 'ReadyToStream', 'Size (Mb)', 'Duration (s)', 'Dimensions']
         );
+
+        $totalTime = array_sum(array_column($videoResponse->getResult(), 'duration'));
+        $totalSize = array_sum(array_column($videoResponse->getResult(), 'size'));
+
+        $this->outputLine('Total %s minutes / %s mb', [round($totalTime / 60, 2),  round($totalSize / 1024 / 1024, 2)]);
     }
 
     /**
