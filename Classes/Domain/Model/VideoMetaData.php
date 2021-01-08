@@ -54,12 +54,18 @@ class VideoMetaData
         }
 
         $videoMetaData = new static();
-        $videoMetaData->setCloudflareUid($result['uid']);
-        $videoMetaData->setDashUri($result['playback']['dash'] ?? '');
-        $videoMetaData->setHlsUri($result['playback']['hls'] ?? '');
-        $videoMetaData->setThumbnailUri($result['thumbnail'] ?? '');
+        $videoMetaData->setValuesFromCloudflareResponse($response);
 
         return $videoMetaData;
+    }
+
+    public function setValuesFromCloudflareResponse(CloudflareResponse $response): void
+    {
+        $result = $response->getResult();
+        $this->setCloudflareUid($result['uid']);
+        $this->setDashUri($result['playback']['dash'] ?? '');
+        $this->setHlsUri($result['playback']['hls'] ?? '');
+        $this->setThumbnailUri($result['thumbnail'] ?? '');
     }
 
     /**
