@@ -98,18 +98,10 @@ class CloudflareClient
         }
 
         $response = $tusClient->getClient()->head($tusClient->getUrl());
+        $cloudFlareUid = current($response->getHeader('stream-media-id'));
+        $cloudflareResponse = $this->getVideo($cloudFlareUid);
 
-        $cloudflareResponse = new CloudflareResponse(
-            $response->getStatusCode() === 200,
-            [],
-            [],
-            [
-                'uid' => current($response->getHeader('stream-media-id')),
-            ],
-            $response->getStatusCode()
-        );
-
-        if ($cloudflareResponse->isSuccess()) {
+        if ($response->getStatusCode() === 200 && $cloudflareResponse->isSuccess()) {
             $this->logger->info(sprintf('Successfully uploaded video %s to cloudflare. Cloudflare Id: %s', $video->getResource()->getFilename(), $cloudflareResponse->getResult()['uid']), LogEnvironment::fromMethodName(__METHOD__));
         } else {
             $this->logger->error(sprintf('Error while uploading video %s to cloudflare. Error: %s', $video->getResource()->getFilename(), $cloudflareResponse->getErrorInformation()), LogEnvironment::fromMethodName(__METHOD__));

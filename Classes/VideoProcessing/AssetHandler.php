@@ -126,7 +126,10 @@ class AssetHandler
         $videoMetaData = $this->videoMetaDataRepository->findOneByVideo($asset);
 
         if ($videoMetaData instanceof VideoMetaData) {
-            if ($this->cloudflareClient->getVideo($videoMetaData->getCloudflareUid())->isSuccess()) {
+            $response = $this->cloudflareClient->getVideo($videoMetaData->getCloudflareUid());
+            if ($response->isSuccess()) {
+                $videoMetaData->setValuesFromCloudflareResponse($response);
+                $this->videoMetaDataRepository->update($videoMetaData);
                 return false;
             }
 
