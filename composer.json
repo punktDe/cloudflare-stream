@@ -4,7 +4,7 @@
     "name": "punktde/cloudflare-stream",
     "license": "MIT",
     "require": {
-        "neos/neos": "^4.1 || ^5.0 || ^7.0",
+        "neos/neos": "^5.0 || ^7.0  || ^8.0",
         "ankitpokhrel/tus-php": "^2.1"
     },
     "autoload": {
