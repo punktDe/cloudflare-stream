@@ -16,7 +16,7 @@ use PunktDe\Cloudflare\Stream\Domain\Model\VideoMetaData;
 /**
  * @Flow\Scope("singleton")
  *
- * @method indOneByVideo(Video $video): ?VideoMetaData
+ * @method findOneByVideo(Video $video): ?VideoMetaData
  * @method findOneByCloudflareUid(string $identifier): ?VideoMetaData
  */
 class VideoMetaDataRepository extends Repository
