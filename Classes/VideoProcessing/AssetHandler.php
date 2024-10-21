@@ -47,6 +47,7 @@ class AssetHandler
      */
     public function assetCreated(AssetInterface $asset): void
     {
+
         /** @var Video $asset */
         $this->uploadIfNecessary($asset);
     }
@@ -108,6 +109,8 @@ class AssetHandler
             return false;
         }
 
+        $this->logger->debug(sprintf('Uploading asset %s to cloudflare if not already existent', $asset->getResource()->getFilename()), LogEnvironment::fromMethodName(__METHOD__));
+
         /** @var Video $asset */
         $videoMetaData = $this->videoMetaDataRepository->findOneByVideo($asset);
 
@@ -127,7 +130,8 @@ class AssetHandler
         } catch (\Exception $e) {
             // Keep the uploaded video and resource
             $this->persistenceManager->persistAll();
-            throw $e;
+            $this->logger->error('Error while uploading file: ' . $e->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
+            return false;
         }
 
         $videoMetaData->setVideo($asset);
@@ -161,6 +165,8 @@ class AssetHandler
         if (!$this->shouldProcess($asset)) {
             return;
         }
+
+        $this->logger->debug(sprintf('Removing asset %s from cloudflare if existent', $asset->getResource()->getFilename()), LogEnvironment::fromMethodName(__METHOD__));
 
         /** @var Video $asset */
         $videoMetaData = $this->videoMetaDataRepository->findOneByVideo($asset);
