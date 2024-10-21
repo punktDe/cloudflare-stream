@@ -22,34 +22,20 @@ use PunktDe\Cloudflare\Stream\Domain\Repository\VideoMetaDataRepository;
 use PunktDe\Cloudflare\Stream\Exception\ConfigurationException;
 use PunktDe\Cloudflare\Stream\Exception\TransferException;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope("singleton")]
 class AssetHandler
 {
-    /**
-     * @Flow\Inject
-     * @var CloudflareClient
-     */
-    protected $cloudflareClient;
+    #[Flow\Inject]
+    protected CloudflareClient $cloudflareClient;
 
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
+    #[Flow\Inject]
+    protected LoggerInterface $logger;
 
-    /**
-     * @Flow\Inject
-     * @var VideoMetaDataRepository
-     */
-    protected $videoMetaDataRepository;
+    #[Flow\Inject]
+    protected VideoMetaDataRepository $videoMetaDataRepository;
 
-    /**
-     * @Flow\Inject
-     * @var PersistenceManager
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManager $persistenceManager;
 
     /**
      * @param AssetInterface $asset
@@ -149,10 +135,6 @@ class AssetHandler
         return true;
     }
 
-    /**
-     * @param AssetInterface $asset
-     * @return bool
-     */
     private function shouldProcess(AssetInterface $asset): bool
     {
         if (!$asset instanceof Video) {
