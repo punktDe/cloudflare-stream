@@ -26,9 +26,9 @@ class VideoMetaData
 
     /**
      * @var Video
-     * @ORM\OneToOne(cascade={"PERSIST", "REMOVE"}, orphanRemoval=true)
+     * @ORM\OneToOne
      */
-    protected ?Video $video = null;
+    protected Video $video;
 
     /**
      * @var string
@@ -45,7 +45,13 @@ class VideoMetaData
      */
     protected string $dashUri = '';
 
-    public static function fromCloudflareResponse(CloudflareResponse $response): self
+
+    public function __construct(Video $video)
+    {
+        $this->video = $video;
+    }
+
+    public static function fromCloudflareResponse(Video $video, CloudflareResponse $response): self
     {
         $result = $response->getResult();
 
@@ -53,7 +59,7 @@ class VideoMetaData
             throw new TransferException('The video UID was not set in the cloudflare response. Errors: ' . $response->getErrorInformation(), 1604473536);
         }
 
-        $videoMetaData = new static();
+        $videoMetaData = new static($video);
         $videoMetaData->setValuesFromCloudflareResponse($response);
 
         return $videoMetaData;
