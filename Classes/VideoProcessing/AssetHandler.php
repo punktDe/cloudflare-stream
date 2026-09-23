@@ -62,7 +62,7 @@ class AssetHandler
      */
     public function assetRemoved(AssetInterface $asset): void
     {
-        $this->removeAsset($asset);
+        $this->removeAssetFromCloudflareAndMetaData($asset);
     }
 
     /**
@@ -74,7 +74,7 @@ class AssetHandler
      */
     public function assetResourceReplaced(AssetInterface $asset): void
     {
-        $this->removeAsset($asset);
+        $this->removeAssetFromCloudflareAndMetaData($asset);
         $this->uploadIfNecessary($asset);
     }
 
@@ -126,7 +126,7 @@ class AssetHandler
         }
 
         try {
-            $videoMetaData = VideoMetaData::fromCloudflareResponse($this->cloudflareClient->uploadVideo($asset));
+            $videoMetaData = VideoMetaData::fromCloudflareResponse($asset, $this->cloudflareClient->uploadVideo($asset));
         } catch (\Exception $e) {
             // Keep the uploaded video and resource
             $this->persistenceManager->persistAll();
@@ -134,7 +134,6 @@ class AssetHandler
             return false;
         }
 
-        $videoMetaData->setVideo($asset);
         $this->videoMetaDataRepository->add($videoMetaData);
         return true;
     }
@@ -160,7 +159,7 @@ class AssetHandler
      * @throws JsonException
      * @throws TransferException
      */
-    private function removeAsset(AssetInterface $asset): void
+    private function removeAssetFromCloudflareAndMetaData(AssetInterface $asset): void
     {
         if (!$this->shouldProcess($asset)) {
             return;
@@ -181,5 +180,6 @@ class AssetHandler
         }
 
         $this->videoMetaDataRepository->remove($videoMetaData);
+        $this->persistenceManager->persistAll();
     }
 }
