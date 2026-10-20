@@ -122,7 +122,9 @@ class AssetHandler
                 return false;
             }
 
+            // Doctrine executes inserts before deletes, so the new record would violate the unique video constraint
             $this->videoMetaDataRepository->remove($videoMetaData);
+            $this->persistenceManager->persistAll();
         }
 
         try {
@@ -135,6 +137,8 @@ class AssetHandler
         }
 
         $this->videoMetaDataRepository->add($videoMetaData);
+        // A following assetUpdated signal in the same request (e.g. replace with upload properties) must find this record, otherwise the video is uploaded twice
+        $this->persistenceManager->persistAll();
         return true;
     }
 
