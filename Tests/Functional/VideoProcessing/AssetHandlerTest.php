@@ -102,6 +102,31 @@ class AssetHandlerTest extends FunctionalTestCase
 
 
     /**
+     * @test
+     */
+    public function replaceFollowedByUpdateKeepsSingleVideoMetaData(): void
+    {
+        /** @var Video $importedVideo */
+        $importedVideo = $this->prepareImportedVideo();
+        $originalCloudflareUid = $this->videoMetaDataRepository->findOneByVideo($importedVideo)->getCloudflareUid();
+
+        $replacementResource = $this->resourceManager->importResource(realpath(__DIR__ . '/../Fixture/Sample.mov'));
+        $this->assetService->replaceAssetResource($importedVideo, $replacementResource);
+        // Media UI updates the asset again after replacing when upload properties are given
+        $this->assetService->getRepository($importedVideo)->update($importedVideo);
+        $this->persistenceManager->persistAll();
+        $this->persistenceManager->clearState();
+
+        self::assertCount(1, $this->videoMetaDataRepository->findAll());
+        $videoMetaData = $this->videoMetaDataRepository->findOneByVideo($importedVideo);
+        self::assertNotSame($originalCloudflareUid, $videoMetaData->getCloudflareUid());
+        self::assertTrue($this->cloudflareClient->getVideo($videoMetaData->getCloudflareUid())->isSuccess());
+        self::assertFalse($this->cloudflareClient->getVideo($originalCloudflareUid)->isSuccess());
+
+        $this->cloudflareClient->deleteVideo($videoMetaData->getCloudflareUid());
+    }
+
+    /**
      * @return AssetInterface
      * @throws Exception
      */
