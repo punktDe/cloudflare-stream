@@ -1,0 +1,4 @@
+PunktDe_Cloudflare_Stream_UploadAttempts:
+  frontend: Neos\Cache\Frontend\VariableFrontend
+  backend: Neos\Cache\Backend\FileBackend
+  persistent: true

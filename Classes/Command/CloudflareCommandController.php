@@ -21,6 +21,7 @@ use PunktDe\Cloudflare\Stream\Domain\Repository\VideoMetaDataRepository;
 use PunktDe\Cloudflare\Stream\Exception\ConfigurationException;
 use PunktDe\Cloudflare\Stream\Exception\TransferException;
 use PunktDe\Cloudflare\Stream\VideoProcessing\AssetHandler;
+use PunktDe\Cloudflare\Stream\VideoProcessing\PendingVideoUploader;
 
 class CloudflareCommandController extends CommandController
 {
@@ -48,6 +49,12 @@ class CloudflareCommandController extends CommandController
      * @var AssetHandler
      */
     protected $assetHandler;
+
+    /**
+     * @Flow\Inject
+     * @var PendingVideoUploader
+     */
+    protected $pendingVideoUploader;
 
     /**
      * List all uploaded videos for that account
@@ -119,5 +126,20 @@ class CloudflareCommandController extends CommandController
             $uploaded = $this->assetHandler->uploadIfNecessary($video);
             $this->outputLine($uploaded ? '<success>Uploaded</success>' : 'Not uploaded');
         }
+    }
+
+    /**
+     * Upload all videos which are not yet uploaded to cloudflare
+     *
+     * Meant to be run regularly (e.g. by a cronjob) if processing.async is enabled.
+     * Videos are skipped after processing.maximumAttempts failed uploads.
+     */
+    public function uploadPendingCommand(): void
+    {
+        $uploadedVideos = $this->pendingVideoUploader->uploadPendingVideos(function (string $filename, string $result) {
+            $this->outputLine('%s ... %s', [$filename, $result]);
+        });
+
+        $this->outputLine('<bold>Uploaded %s videos</bold>', [$uploadedVideos]);
     }
 }
