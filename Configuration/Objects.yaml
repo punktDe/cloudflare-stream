@@ -1,0 +1,9 @@
+PunktDe\Cloudflare\Stream\VideoProcessing\PendingVideoUploader:
+  properties:
+    uploadAttemptsCache:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: PunktDe_Cloudflare_Stream_UploadAttempts

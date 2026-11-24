@@ -26,6 +26,34 @@ Just configure you cloudflare credentials:
 	        # Proxy to reach the cloudflare API
 	        proxyUrl: ''
 
+### Asynchronous upload
+
+By default, videos are uploaded to cloudflare during the request which creates or replaces them. For large videos this
+can take several minutes and may run into timeouts of proxies or the web server. Enable asynchronous processing to
+upload them in a separate process instead:
+
+	PunktDe:
+	  Cloudflare:
+	    Stream:
+	      processing:
+	        async: true
+	        # Number of failed upload attempts after which a video is skipped
+	        maximumAttempts: 3
+
+Then run `./flow cloudflare:uploadPending` regularly, e.g. every minute by a cronjob. Until it has run, the
+`Stream.getVideoMetaData()` eelHelper returns `null` for new videos, so make sure your rendering handles this case.
+Make sure the command is not run concurrently, otherwise videos might be uploaded twice.
+
+### Using a mock server for testing
+
+The cloudflare API endpoint can be changed, e.g. to point to a local mock server in a development environment:
+
+	PunktDe:
+	  Cloudflare:
+	    Stream:
+	      cloudflare:
+	        apiEndpoint: 'http://cloudflare-mock:8080/client/v4/'
+
 ## Get Stream meta data using the provided eelHelper
 
 
@@ -57,3 +85,4 @@ In your custome project code, add a node type with a video ptoperty to select or
 | `cloudflare:listvideos ` | List all uploaded videos for that account |
 | `cloudflare:deletevideo `| Delete a video from cloudflare            |
 | `cloudflare:uploadAll`   | Upload all existing videos to cloudflare  |
+| `cloudflare:uploadPending` | Upload all videos which are not yet uploaded to cloudflare (for asynchronous processing) |

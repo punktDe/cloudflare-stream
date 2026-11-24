@@ -2,11 +2,19 @@ PunktDe:
   Cloudflare:
     Stream:
       cloudflare:
+        # Base URI of the cloudflare API, change only to use a mock server for testing
+        apiEndpoint: 'https://api.cloudflare.com/client/v4/'
         authentication:
           accountIdentifier: ''
           token: ''
       transfer:
         # Proxy to reach the cloudflare API
         proxyUrl: ''
+      processing:
+        # If enabled, videos are not uploaded to cloudflare during the request which created or replaced them,
+        # but by the command cloudflare:uploadPending which has to be run regularly (e.g. by a cronjob)
+        async: false
+        # Number of failed upload attempts after which cloudflare:uploadPending skips a video
+        maximumAttempts: 3
 
 

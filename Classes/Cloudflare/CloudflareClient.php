@@ -39,6 +39,12 @@ class CloudflareClient
     protected array $authentication = [];
 
     /**
+     * @Flow\InjectConfiguration(package="PunktDe.Cloudflare.Stream", path="cloudflare.apiEndpoint")
+     * @var string|null
+     */
+    protected ?string $apiEndpoint = null;
+
+    /**
      * @Flow\InjectConfiguration(package="PunktDe.Cloudflare.Stream", path="transfer")
      * @var string[]
      */
@@ -160,7 +166,7 @@ class CloudflareClient
      */
     private function buildUriForIdentifier(string $identifier): UriInterface
     {
-        $uri = $this->uriFactory->createUri(self::CLOUDFLARE_API_ENDPOINT);
+        $uri = $this->uriFactory->createUri($this->apiEndpoint ?: self::CLOUDFLARE_API_ENDPOINT);
         $path = Files::concatenatePaths([$uri->getPath(), 'accounts', $this->authentication['accountIdentifier'], 'stream', $identifier]);
         return $uri->withPath($path);
     }

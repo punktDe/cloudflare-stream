@@ -37,6 +37,9 @@ class AssetHandler
     #[Flow\Inject]
     protected PersistenceManager $persistenceManager;
 
+    #[Flow\InjectConfiguration(path: "processing.async", package: "PunktDe.Cloudflare.Stream")]
+    protected bool $asyncProcessing = false;
+
     /**
      * @param AssetInterface $asset
      * @return void
@@ -47,6 +50,9 @@ class AssetHandler
      */
     public function assetCreated(AssetInterface $asset): void
     {
+        if ($this->asyncProcessing) {
+            return;
+        }
 
         /** @var Video $asset */
         $this->uploadIfNecessary($asset);
@@ -75,6 +81,10 @@ class AssetHandler
     public function assetResourceReplaced(AssetInterface $asset): void
     {
         $this->removeAssetFromCloudflareAndMetaData($asset);
+        if ($this->asyncProcessing) {
+            return;
+        }
+
         $this->uploadIfNecessary($asset);
     }
 
@@ -91,6 +101,10 @@ class AssetHandler
      */
     public function assetUpdated(AssetInterface $asset): void
     {
+        if ($this->asyncProcessing) {
+            return;
+        }
+
         /** @var Video $asset */
         $this->uploadIfNecessary($asset);
     }
